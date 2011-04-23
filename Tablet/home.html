@@ -1,0 +1,382 @@
+[% browse = '1' %] 
+[% music = '1' %]
+[% playlist = '0' %]
+
+[%- IF browse_radio -%]
+	[%- thispage = 'radio' -%]
+	[% pagetitle = "Squeezebox : Radio"  %] 
+[%- ELSE -%]
+	[%- thispage = 'home' -%]
+	[% pagetitle = "Squeezebox : Home"  %] 
+[%- END -%]
+
+[%- IF ajaxRequest -%]
+        <pre>
+[% PROCESS ajaxRequest.txt page = thispage %]
+        </pre>
+[%- ELSE -%]
+
+[% PROCESS pageheader.html thispage = thispage %]
+
+<!-- home.html -->
+[% IF ! extended_browse %]	
+
+	<!-- Show banner if there is a new version. -->
+	[% IF newVersion %]
+		<div id="newVersionBanner">
+			[% newVersion %]
+		</div>
+	[% END %]
+
+	[% IF newPlugins %]
+		<div id="newVersionBanner">
+			[% newPlugins %]
+		</div>
+	[% END %]
+	
+	<div id="topinfobar">
+
+		[% IF thispage == 'radio' %]
+			[% "RADIO" | string %] + [% "PLUGIN_MY_APPS_MODULE_NAME" | string %]
+		[%- ELSE %]
+			[% "BROWSE" | string %]
+		[% END %]	
+
+		<div id="playerChooserContainer">
+			[% IF player_chooser_list %]
+				<form method="get" style="display: inline">
+					[% "CURRENT_PLAYER" | string %]
+					<select name="player"  onChange="submit();">
+						[% player_chooser_list %]
+					</select>
+					[% IF page %]
+						<input type = 'hidden' name = 'page' value = '[% page %]'>
+					[% END %]
+					[% IF playerid %]
+						<input type = 'hidden' name = 'playerid' value = '[% playerid %]'>
+					[% END %]
+				</form>
+			[% ELSE %]
+				[%- USE Clients; players = Clients.get("id") -%]
+				[% IF thispage == 'playlist' %]
+					[% IF players.size > 1 %]
+						<form method="get">
+							[% "CURRENT_PLAYER" | string %]
+							<select name="player" onChange="submit();">
+								[% FOREACH playerobj IN players -%]
+									<option value="[% playerobj.id %]" 
+										[% IF player == playerobj.id %]
+											SELECTED
+										[% END %]>
+										[% playerobj.name %]
+									</option>
+								[%- END %]
+							</select>
+						[% END %]
+						[% IF page %]
+							<input type = 'hidden' name = 'page' value = '[% page %]'>
+						[% END %]
+						[% IF playerid %]
+							<input type = 'hidden' name = 'playerid' value = '[% playerid %]'>
+						[% END %]
+						</form>
+					[% ELSE %]
+						[% FOREACH playerobj IN players %]
+							[% IF player == playerobj.id %]
+								[% "CURRENT_PLAYER" | string %]
+							[% IF playerobj.name %]
+								[% playerobj.name %]
+							[% ELSE %]
+								[% player %]
+							[% END %]
+						[% END %]
+					[% END %]
+				[% END %]
+			[% END %]
+			
+			[%# hack to retrieve player power when it's not available on the page %]
+			[% UNLESS mode %]
+				[%- USE Clients; players = Clients.get("id") -%]
+				[%- FOREACH playerobj IN players %]
+					[%- IF playerobj.id == player %]
+						[%- IF playerobj.power == '1' %]
+							[% mode = 'on' %]
+						[%- ELSE %]
+							[% mode = 'off' %]
+						[% END -%]
+					[% END -%]
+				[% END -%]
+			[% END -%]
+			&nbsp;|&nbsp;
+			
+				<a href = "[% webroot %][% statusroot %]?p0=power&amp;p1=[% IF mode == 'off' %]1[% ELSE %]
+						0[% END %]&amp;p2=&amp;player=[% playerURI %]&amp;start=">
+					<img style="vertical-align: top" src="[% webroot %]html/images/power[% IF mode == 'off' %]_off[% END %].png">
+				</a>				
+		</div>			
+	</div>
+	
+	[% IF thispage == 'radio' %]
+		<div id="radioTuneIn">
+			[% INCLUDE tune_in_form %]
+		</div>
+	[% END %]	
+
+	[% IF thispage != 'radio' %]
+		<div id="homeLinksContainer">
+			[% INCLUDE albums %]
+			[% INCLUDE artist %]
+			[% INCLUDE playlists %]
+			[% INCLUDE random_mix %]
+			[% INCLUDE genre %]
+			[% INCLUDE favorites %]
+			[% INCLUDE new_music %]
+			[% INCLUDE more %]
+		</div> <!-- homelinks -->		
+	[% ELSE %]
+		[% linkList = [] %]
+		[%- FOREACH item = additionalLinkOrder.radios %][% key = item %][% value = additionalLinks.radios.$item %]
+			[% linkList.push([key,value]) %]
+		[%- END %]
+		[%- FOREACH link = additionalLinks.radios; IF !additionalLinkOrder.radios.grep(link.key).size %][% value = link.value %][% key = link.key %]
+			[% linkList.push([key,value]) %]
+		[%- END;END %]
+		[%- FOREACH item = additionalLinkOrder.my_apps %][% key = item %][% value = additionalLinks.my_apps.$item %]
+			[% linkList.push([key,value]) %]
+		[%- END %]
+		[%- FOREACH link = additionalLinks.apps; IF !additionalLinkOrder.my_apps.grep(link.key).size %][% value = link.value %][% key = link.key %]
+			[% linkList.push([key,value]) %]
+		[%- END;END %]
+		[% FOREACH link = linkList %][% key = link.0 %][% value = link.1 %]
+			[%- iconWidth = 80 -%]
+			[% UNLESS loop.index % 2 %]
+				<div class="radioLinkRow">
+			[% END %]
+				
+				<div class="homeMenuItem">
+					<a href="[% value %]player=[% playerURI %]">
+						[% imageproxy = "http://www.mysqueezebox.com/public/imageproxy" %]
+						<img src="[% IF additionalLinks.icons.$key %][% additionalLinks.icons.$key.match('^http') ? imageproxy _ '?u=' _ additionalLinks.icons.$key _ '&amp;w=' _ iconWidth : webroot _ additionalLinks.icons.$key.replace('.png', "_${iconWidth}x${iconWidth}_F.png") %][% ELSE %]html/images/radio.gif[% END %]" width = '[% iconWidth %]' border="0" alt = 'radio'>
+					</a>
+						<div align="center" valign = 'top' class="menutext">[% key | getstring %]</div>
+				</a>
+				</div>
+			[% IF loop.index % 2 || loop.last %]
+				</div>
+			[% END %]
+		[% END %]
+	[% END %]
+
+	[% IF thispage != 'radio' %]
+		<div id="extendedOptionsBar">
+			<a href="[% webroot %]settings/server/basic.html">[% "SERVER_SETTINGS" | string %]</a>
+			&nbsp; | &nbsp;
+			
+			<a href="[% webroot %]settings/player/basic.html?player=[% playerURI %]
+				&amp;playerid=[% playerURI %]">[% "PLAYER_SETTINGS" | string %]</a>
+
+<!--
+			&nbsp; | &nbsp;
+
+			<a href="[% webroot %]home.html?extended_browse=1&player=[% playerURI %]">
+				[% "MORE" | string %]
+			</a>
+-->
+		</div>
+	[% END %]
+
+	
+[% ELSE %]	
+
+	<!-- More View  for when extended_browse is True -->
+	
+	<div id="topinfobar">
+		More Options
+	</div>
+
+	<div class="homeMenuSection">
+		<div class='homeMenuSectionTitle'>[% "BROWSE_MUSIC" | string | upper %]</div>
+		<ul>
+		[%- FOREACH link = additionalLinks.browse %]
+			<li><a href="[% link.value | html %]player=[% playerURI %]">[% link.key | string %]</a></li>
+		[%- END %]
+	
+		<li>
+		<a href="[% webroot %]hitlist.html">[% 'STATISTICS' | string %]</a>
+		</li>
+		</ul>
+	</div>
+	
+	<div class="homeMenuSection">
+		<div class='homeMenuSectionTitle'>[% "RADIO" | string | upper %]</div>
+		<ul>
+		[%- FOREACH item = additionalLinkOrder.radios %]
+			<li><a href="[% additionalLinks.radios.$item | html %]player=[% playerURI %]">[% item | getstring | html %]</a></li>
+		[%- END %]
+		[%- FOREACH link = additionalLinks.radios; IF !additionalLinkOrder.radios.grep(link.key).size %]
+			<li><a href="[% link.value | html %]player=[% playerURI %]">[% link.key | string %]</a></li>
+		[%- END;END %]
+			<li><a href="tunein.html?player=[% playerURI %]">[% "RADIO_TUNEIN" | string %]</a></li>
+		</ul>	
+	</div>
+	
+	<div class="homeMenuSection">
+		<div class='homeMenuSectionTitle'>[% "SEARCH" | string | upper %]</div>
+		<ul>
+		[%- FOREACH key = additionalLinks.search.keys %]
+			<li><a href="[% additionalLinks.search.$key | html %]player=[% playerURI %]">[% key | string %]</a></li>
+		[%- END %]
+		</ul>
+	</div>
+	
+	[% IF additionalLinks.plugins %]
+	<div class="homeMenuSection">
+		<div class='homeMenuSectionTitle'>[% "PLUGINS" | string | upper %]</div>
+		<ul>
+			[%- FOREACH key = additionalLinks.plugins.keys %]
+				<li><a href="[% additionalLinks.plugins.$key | html %]player=[% playerURI %]">[% key | string %]</a></li>
+			[%- END %]
+		</ul>
+	</div>
+	[% END %]
+	
+
+	[% IF not nosetup %]
+	<div class="homeMenuSection">
+		<div class='homeMenuSectionTitle'>[% "SETTINGS" | string | upper %]</div>
+		<ul>
+		[%- IF not noserver %]
+			<li><a href="settings/server/basic.html">[% "SERVER_SETTINGS" | string %]</a></li>
+		[%- END %]
+	
+		[%- USE Clients; players = Clients.get("name"); FOREACH client = players; %]
+			<li><a href="setup.html?page=BASIC_PLAYER_SETTINGS&amp;player=[% playerURI %]&amp;playerid=[% client.id | uri %]">[% "PLAYER_SETTINGS" | string %][% IF client.name %] [% "FOR" | string %] [% client.name %][% END %]</a></li>
+		[%- END %]
+	
+		[%- FOREACH key = additionalLinks.settings.keys %]
+			<li><a href="[% additionalLinks.settings.$key | html %]player=[% playerURI %]">[% key | string %]</a></li>
+		[%- END %]
+		</ul>
+	</div>
+	[% END %]
+	
+	<div class="homeMenuSection">
+		<div class='homeMenuSectionTitle'>[% "HELP" | string | upper %]</div>
+		<ul>
+		[%- FOREACH link = additionalLinks.help %]
+			<li><a href="[% link.value | html %][% IF NOT link.value.match('^http') %]player=[% playerURI %][% END %]" [% IF link.value.match('^http') %]target="_new"[% END %]>[% link.key | string %]</a></li>
+		[%- END %]
+		</ul>
+	</div>
+	
+[% END %]
+
+[% IF thispage == 'radio' %]
+	[% PROCESS pagefooter.html %]
+[% ELSE %]
+	[% PROCESS pagefooter.html noBuffer = '1' %]
+[% END %]
+
+
+[%- END -%]
+
+
+
+[% BLOCK tune_in_form %]
+	[% 'RADIO_TUNEIN_RADIOURL' | string %]
+	<form name="tune" method="get" action="status.html">
+		<input type="text" name="p2" size="60">
+		<input type="button" value="[% "RADIO_TUNEIN_CHOOSE" | string %]" 
+			onclick = "document.tune.submit();">
+		<input type="hidden" name="p0" value="playlist">
+		<input type="hidden" name="p1" value="play">
+		<input type="hidden" name="player" value="[% player %]">
+	</form>
+[% END %]
+
+[% BLOCK favorites %]
+		[% FOR links IN additionalLinks %][% END %]
+		<div class="homeMenuItem">
+			<a href="[% webroot %]plugins/Favorites/index.html?fav&player=[% playerURI %]">
+				<img src="html/images/favourites.png" name="bild10" border="0" alt = 'favourites'>
+				<div align="center" valign = 'top' class="menutext">[% "FAVORITES" | string %]</div>
+			</a>
+		</div>
+[% END %]
+
+[% BLOCK genre %]
+	[% IF additionalLinks.browse.BROWSE_BY_GENRE %]
+		<div class="homeMenuItem">
+			<a href="[% webroot %][% additionalLinks.browse.BROWSE_BY_GENRE %]&player=[% playerURI %]" >
+				<img src="html/images/genre.png" name="bild8" border="0" alt = 'genre'>
+				<div align="center" valign = 'top' class="menutext">[% "GENRES" | string %]</div>
+			</a>
+		</div>
+	[% END %]
+[% END %]
+
+[% BLOCK playlists %]
+	[% IF additionalLinks.browse.SAVED_PLAYLISTS %]
+		<div class="homeMenuItem">
+			<a href="[% webroot %][% additionalLinks.browse.SAVED_PLAYLISTS %]&player=[% playerURI %]" >
+				<img src="html/images/playlist.png" border="0" name="bild7" alt = 'playlist'>
+				<div align="center" valign = 'top' class="menutext">[% "PLAYLISTS" | string %]</div>
+			</a>
+		</div>
+	[% END %]
+[% END %]
+
+[% BLOCK albums %]
+	[% IF additionalLinks.browse.BROWSE_BY_ALBUM %]
+		<div class="homeMenuItem">
+			<a href="[% webroot %][% additionalLinks.browse.BROWSE_BY_ALBUM %]&player=[% playerURI %]" >
+				<img src="html/images/album.png" name="bild6" border="0" alt = 'album'>
+				<div align="center" valign = 'top' class="menutext">[% "ALBUMS" | string %]</div>
+			</a>
+		</div>
+	[% END %]
+[% END %]
+
+[% BLOCK artist %]
+	[% IF additionalLinks.browse.BROWSE_BY_ARTIST %]
+		<div class="homeMenuItem">
+			<a href="[% webroot %][% additionalLinks.browse.BROWSE_BY_ARTIST %]&player=[% playerURI %]" >
+				<img src="html/images/artist.png" name="bild3" border="0" alt = 'artist'>
+				<div align="center" valign = 'top' class="menutext">[% "ARTIST" | string %]</div>
+		</a>
+		</div>
+	[% END %]
+[% END %]
+
+[% BLOCK random_mix %]
+	[% IF additionalLinks.browse.PLUGIN_RANDOMPLAY %]
+		<div class="homeMenuItem">
+			<a href="[% webroot %][% additionalLinks.browse.PLUGIN_RANDOMPLAY %]&player=[% playerURI %]" >
+				<img src="html/images/random.png" name="bild5" border="0" alt = 'random'>
+				<div align="center" valign = 'top' class="menutext">[% "PLUGIN_RANDOMPLAY" | string %]</div>
+			</a>
+		</div>
+	[% END %]
+[% END %]
+
+[% BLOCK new_music %]
+	[% IF additionalLinks.browse.BROWSE_NEW_MUSIC %]
+	<div class="homeMenuItem">
+		<a href="[% webroot %][% additionalLinks.browse.BROWSE_NEW_MUSIC %]&player=[% playerURI %]">
+			<img src = 'html/images/new_music.png' name = 'bild4' border = '0' alt = 'new'>
+				<div align="center" valign = 'top' class="menutext">[% "BROWSE_NEW_MUSIC" | string %]</div>
+		</a>
+	</div>
+	[% END %]
+[% END %]
+
+[% BLOCK more %]
+	<div class="homeMenuItem">
+		<a href="[% webroot %]home.html?extended_browse=1&player=[% playerURI %]">
+			<img src = 'html/images/more.png' name = 'bild4' border = '0' alt = 'new'>
+				<div align="center" valign = 'top' class="menutext">[% "MORE" | string %]</div>
+		</a>
+	</div>
+[% END %]
+
+

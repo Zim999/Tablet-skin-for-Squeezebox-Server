@@ -1,0 +1,97 @@
+<!-- pageheader.html -->
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+	[% PROCESS standardheader.html %]
+	[% IF pageHeaderScripts %]
+		[% pageHeaderScripts %]
+	[% ELSE %]
+		<script type="text/javascript">[% PROCESS html/vars.js %]</script>
+		<script src="[% webroot %]html/prototype.js?r=[% revision %]" type = 'text/javascript'></script>
+		<script src="[% webroot %]html/global.js?r=[% revision %]" type = 'text/javascript'></script>
+		<script type = 'text/javascript'>
+			[% IF thispage == 'status' %]
+				[% PROCESS status.js %]
+			[% ELSIF thispage == 'search' %]
+				[% PROCESS search.js %]
+			[% ELSIF thispage == 'playlist' %]
+				[% PROCESS playlist.js %]
+			[% ELSIF thispage == 'artwork' || ( artwork == 1 && (levelName == 'album' || levelName == 'age')) %]
+				[% PROCESS artwork.js %]
+			[% ELSE %]
+				[% PROCESS browse.js %]
+			[% END %]
+ 		</script>
+	[% END %]
+
+	<meta name = "viewport" content = "width = device-width">
+	<link rel="apple-touch-icon" href="[% webroot %]html/images/apple-touch-ipad-icon.png">
+	<link rel="stylesheet" media="all and (orientation:portrait)" href="[% webroot %]portrait.css">
+	
+	<script>
+		var IsiPad = navigator.userAgent.indexOf("iPad") != -1 ;
+		
+		if (!IsiPad) 
+		{
+			$$('link[rel="apple-touch-icon"]').each(function(link){
+				link.href = "[% webroot %]html/images/apple-touch-icon.png";
+				});		
+		}
+	</script>
+</head>
+<body [% IF class %]class = '[% class %]'[% END %] [% bodyscript %]>
+	<!-- Popup message when item added to playlist -->
+	<div id = 'OSD' style='display:none'>Added to playlist</div>
+	
+	<div id = 'page_with_bar'>
+		<div id = 'topbar'>
+			<img class="topbarControl" 
+				src = '[% webroot %]html/images/play_transparent.gif' onClick='miniControls("play");' alt = 'Play'>
+			<img class="topbarControl" 
+				src = '[% webroot %]html/images/pause_transparent.gif' onClick='miniControls("pause");' alt = 'Pause'>
+			<span id="squeezeservertitle">SqueezeServer</span>
+			<span >
+				<a id="aboutlink" href="[% webroot %]html/about.html">[% "ABOUT_SHORT" | string %]</a>
+			</span>
+		</div>
+	
+		<!-- Top Menu -->
+		<div id='menu'>
+			<div class="menuItem">
+			<a href="[% webroot %]home.html?player=[% playerURI %]" title='[% "HOME" | string %]'>
+				<img src="[% webroot %]html/images/menu_home[% IF thispage == 'home' %]_active[% END %].png" 
+					name='nav1' alt='[% "HOME" | string %]'>
+			</a>
+			</div>
+			<div class="menuItem">
+			<a href="[% webroot %]status.html?player=[% playerURI %]" title='[% "NOW_PLAYING" | string %]'>
+				<img src="[% webroot %]html/images/menu_status[% IF thispage == 'status' %]_active[% END %].png" 
+					name='nav2' alt='[% "NOW_PLAYING" | string %]'>
+			</a>
+			</div>
+			<div class="menuItem">
+			<a href="[% webroot %]playlist.html?player=[% playerURI %]" title='[% "CURRENT_PLAYLIST" | string %]'>
+				<img src="[% webroot %]html/images/menu_playlist[% IF thispage == 'playlist' %]_active[% END %].png" 
+					name='nav3' alt='[% "CURRENT_PLAYLIST" | string %]'>
+			</a>
+			</div>
+			<div class="menuItem">
+			<a href="[% webroot %]home.html?browse_radio=1&amp;player=[% playerURI %]" title='[% "RADIO" | string %] + 
+				[% "PLUGIN_MY_APPS_MODULE_NAME" | string %]'>
+				<img src="[% webroot %]html/images/menu_radio[% IF thispage == 'radio' %]_active[% END %].png" 
+					name='nav4' alt='[% "RADIO" | string %] + [% "PLUGIN_MY_APPS_MODULE_NAME" | string %]'>
+			</a>
+			</div>
+			<div class="menuItem">
+			<a href="[% webroot %]search.html?player=[% playerURI %]" title='[% "SEARCH" | string %]'>
+				<img src="[% webroot %]html/images/menu_search[% IF thispage == 'search' %]_active[% END %].png" 
+					name='nav5' alt='[% "SEARCH" | string%]'>
+			</a>
+			</div>
+		</div>
+		
+<!-- End pageheader.html -->
+
+[% pageHeaderInfo %]
+
+

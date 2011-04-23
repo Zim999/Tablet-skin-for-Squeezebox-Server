@@ -1,0 +1,413 @@
+[%# Page status.html %]
+[%- IF ajaxRequest -%]
+	<pre>
+	[% PROCESS ajaxRequest.txt page = 'status' %][% PROCESS ajaxStatus.txt page = 'status' %]
+	</pre>
+[%- ELSE -%]
+<!-- status.html -->
+[% pagetitle = BLOCK %]
+[%- playermodel | string %] : [% "PLAYING" | string -%]
+[%- END -%]
+[% IF player_name %][% player_name = player_name %][% END %]
+[% player.name %]
+[%- setup    = '1'
+    music    = '0'
+    playlist = '0'
+    status   = '1' -%]
+[%- PROCESS pageheader.html thispage = 'status' -%]
+
+	<div id = 'volumeOSD' style="display:none;"></div>
+
+	<div id="topinfobar">
+		[% INCLUDE playlist_info_display %]
+		<div id="currentPlayerDisplay">
+			[%- USE Clients; players = Clients.get("id") -%]
+
+			[% FOREACH playerobj IN players %]
+				[% IF player == playerobj.id %]
+					[% "CURRENT_PLAYER" | string %]
+					[% IF playerobj.name %]
+						[% playerobj.name %]
+					[% ELSE %]
+						[% player %]
+					[% END %]
+				[% END %]
+			[% END %]
+			
+			[%# hack to retrieve player power when it's not available on the page %]
+			[% UNLESS mode %]
+				[%- USE Clients; players = Clients.get("id") -%]
+				[%- FOREACH playerobj IN players %]
+					[%- IF playerobj.id == player %]
+						[%- IF playerobj.power == '1' %]
+							[% mode = 'on' %]
+						[%- ELSE %]
+							[% mode = 'off' %]
+						[% END -%]
+					[% END -%]
+				[% END -%]
+			[% END -%]
+			&nbsp;|&nbsp;
+		
+			<a href = "[% webroot %][% statusroot %]?p0=power&amp;p1=[% IF mode == 'off' %]1[% ELSE %]
+					0[% END %]&amp;p2=&amp;player=[% playerURI %]&amp;start=">
+				<img style="vertical-align: top" src="[% webroot %]html/images/power[% IF mode == 'off' %]_off[% END %].png">
+			</a>				
+
+			<div style="clear:both">&nbsp;</div>
+		</div>			
+	</div>
+
+	<div id="currentlyPlayingContainer">
+		<div id="artworkContainer">
+			<div id = 'coverart'>
+				[% INCLUDE cover_art_display %]
+			</div>
+		
+			<div id = 'radioart' style = 'display: none;'>
+
+				[%- IF itemobj.isRemoteURL && plugin_meta.cover -%]
+					<img src="[% plugin_meta.cover %]" width="195" id="radioartpath">
+				[%- ELSIF itemobj.isRemoteURL && plugin_meta.icon -%]
+					<img src="[% plugin_meta.icon %].png" width="195" id="radioartpath">
+				[%- ELSE -%]
+					<img src="[% webroot %]html/images/radio.png" id = 'radioartpath' width = '195' height = '195'>
+				[% END %]
+			</div>
+		</div>
+		
+		<div id="playingTrackContainer">
+			<div id = 'songinfo' style = 'display: none;'>
+				[% INCLUDE song_info_display %]
+			</div>
+
+			<div id = 'radioinfo' style = 'display: none;'>
+						[% INCLUDE radio_info_display %]
+			</div>
+		</div>
+		
+		<table id="controller">
+			<tr>
+				<td class="nextprevTrackTitle">
+					Previous Track:
+				</td>
+				<td>
+					<span id = 'previoussong'></span>
+				</td>
+			</tr>
+			<tr>
+				<td class="nextprevTrackTitle">
+					Next Track:
+				</td>
+				<td>
+					<span id = 'nextsong'></span>
+				</td>
+			</tr>
+		</table>
+		
+	</div>
+
+	<!-- Progress bar and Controls -->
+	<div id = 'controls'>
+		[% INCLUDE progress_bar_display %]
+		
+		<table style="width: 100%; border-spacing: 0px;" cellpadding="0">
+			<tr>
+				<td width = '80%' align = 'center'>
+					[% INCLUDE player_controls %]
+				</td>
+				<td align = 'right'>
+					[% INCLUDE repeat_settings %]
+				</td>
+				<td align = 'right'>
+					[% INCLUDE shuffle_settings %]
+				</td>
+			</tr>
+			<tr>
+				<td colspan="3" width = '100%' align = 'center'>
+					[% INCLUDE volume_settings %]
+				</td>
+			</tr>
+		</table>
+<!-- end controls div -->
+</div>
+
+[% PROCESS pagefooter.html noBuffer = '1' %]
+[% END %]
+
+<!---------------------------->
+
+[% BLOCK repeat_settings %]
+
+<div id="repeatGroup" class="cyclecontrolgroupheader">
+		[% FOREACH type= ['off','song','playlist'] %]
+		<img id = 'repeatcontrol_[% type %]' src="html/images/repeat_[% type %].png" alt = '[% "REPEAT" | string | ucfirst %] [% type %]' 
+			style = 'display:[% IF repeat==loop.index %]block[% ELSE %]none[% END %];'
+			onclick="repeatButtonControl('p0=playlist&p1=repeat&player=[% playerURI %]&start=[% start %]&ajaxRequest=1')">
+		[% END %]
+</div>
+
+[% END %]
+
+[% BLOCK repeat_settings_old %]
+
+<table id="repeatGroup">
+	<tr>
+		<td class="cyclecontrolgroupheader">
+			<img src="html/images/repeat_symbol.png" title = 'Repeat settings'
+				onclick="repeatButtonControl('p0=playlist&p1=repeat&player=[% playerURI %]&start=[% start %]&ajaxRequest=1')"
+			>
+		</td>
+		
+		[% FOREACH type= ['off','song','playlist'] %]
+		<td class="cyclecontrolgroupvalue">
+			<img id = 'repeatcontrol_[% type %]' src="html/images/[% type %]_symbol.png" alt = '[% "REPEAT" | string | ucfirst %] [% type %]' 
+				style = 'display:[% IF repeat==loop.index %]block[% ELSE %]none[% END %];'>
+		</td>
+		[% END %]
+	</tr>
+</table>
+
+[% END %]
+
+[% BLOCK shuffle_settings %]
+
+<div id="shuffleGroup" class="cyclecontrolgroupheader">
+	[% FOREACH type = ['off','song','album'] %]
+		<img id = 'shufflecontrol_[% type %]' src="html/images/shuffle_[% type %].png" alt = '[% "SHUFFLE" | string | ucfirst %] [% type %]' 
+			style = 'display:[% IF shuffle==loop.index %]block[% ELSE %]none[% END %];'
+			onclick="shuffleButtonControl('p0=playlist&p1=shuffle&player=[% playerURI %]&ajaxRequest=1')">
+	[% END %]
+</div>
+
+[% END %]
+
+
+[% BLOCK shuffle_settings_old %]
+
+<table id="shuffleGroup">
+	<tr>
+		<td class="cyclecontrolgroupheader">
+			<img src="html/images/shuffle_symbol.png" title = 'Shuffle settings'
+				onclick="shuffleButtonControl('p0=playlist&p1=shuffle&player=[% playerURI %]&ajaxRequest=1')"
+			>
+		</td>
+		[% FOREACH type = ['off','song','album'] %]
+		<td class="cyclecontrolgroupvalue">
+			<img id = 'shufflecontrol_[% type %]' src="html/images/[% type %]_symbol.png" alt = '[% "SHUFFLE" | string | ucfirst %] [% type %]' 
+				style = 'display:[% IF shuffle==loop.index %]block[% ELSE %]none[% END %];'>
+		</td>
+		[% END %]
+	</tr>
+</table>
+
+[% END %]
+
+[% BLOCK cover_art_display %]
+	<a href = 'http://google.com' id = 'albumhref'>
+		<img src="[% webroot %]html/images/cover.png" id = 'coverartpath' alt = 'cover'>
+	</a>
+[% END %]
+
+[% BLOCK control_display %]
+	<span id = 'playtextmode'></span>
+	<span id = 'thissongnum'></span>
+		[% "OUT_OF" | string %] 
+	<span id = 'songcount'></span>
+	:
+	<a href="[% webroot %]playlist.html?player=[% playerURI %]">
+		[[% "EDIT" | string %]]
+	</a>
+<!--
+&nbsp;
+	<a href="status.html?p0=playlist&p1=zap&p2=[% thissongnum %]&player=[% playerURI %]&start=[% start %]">[zap]</a>
+-->
+[% END %]
+
+[% BLOCK playlist_info_display %]
+	[% INCLUDE control_display %]
+[% END %]
+
+[% BLOCK song_info_display %]
+	<table border="0" cellspacing="0" cellpadding="0">
+		<tr>
+			<td class = 'songinfoheading' nowrap>[% "TITLE" | string %][% "COLON" | string %]</td>
+			<td class = 'songinfotext' nowrap>
+				<a href="http://google.com" id = 'songtitle_link'>
+					<span id = 'songtitle'></span>
+				</a>
+			</td>
+		</tr>
+		<tr>
+			<td class="songinfoheading" nowrap>[% "ARTIST" | string %][% "COLON" | string %]</td>
+			<td class = 'songinfotext' nowrap >
+				<a href="http://google.com" id = 'artist_link'>
+					<span id = 'artist'></span>
+				</a>
+			</td>
+		</tr>
+		<tr>
+			<td colspan="2">
+				<hr />
+			</td>
+		</tr>
+		<tr>
+			<td class = 'songinfoheading' nowrap >[% "ALBUM" | string %][% "COLON" | string %]</td>
+			<td class = 'songinfotext' nowrap >
+				<a href="http://google.com" id = 'album_link'>
+					<span id = 'album'></span>
+				</a>
+			</td>
+		</tr>
+		<tr>
+			<td class="songinfoheading" nowrap>[% "GENRE" | string %][% "COLON" | string %]</td>
+			<td class = 'songinfotext' nowrap>
+				<a href="http://google.com" id = 'genre_link'>
+					<span id = 'genre'></span>
+				</a>
+			</td>
+		</tr>
+	</table>
+[% END %]
+
+[% BLOCK progress_bar_display %]
+
+<div id = 'progressbar_overlay' style = 'display: none;'>
+	<table>
+		<tr>
+			<td class = "progressBarElapsedTime" align = 'left' nowrap id = 'elapsed'>0:00</td>
+			<td class = "progressBarTotalTime" align = 'right' nowrap id = "duration"></td>
+		</tr>
+	</table>
+</div>
+
+<div id = 'progressbar' style = 'display: none; position: absolute; top: 8; left: 8;'>
+	<img id="progressBar" name="progressBar" src="html/images/progress_color.gif" width="1" height="20">
+</div>
+
+[% END %]
+
+[% BLOCK player_controls %]
+<table id="playerGroup" width="100%" border="0" cellspacing="0" cellpadding="0">
+		<tr align="center">
+		<td onClick="playerButtonControl('player', 'play', 'p0=play&player=[% playerURI %]&ajaxRequest=1');">
+			<img id = 'playercontrol_active_play' src = "html/images/pl_play_active.png" border="0" style = 'display:[% IF modeplay %]block[% ELSE %]none[% END %];' title = [% 'PLAY' | string | ucfirst %]>
+			<img id = 'playercontrol_play' src = "html/images/pl_play.png" border="0" style = 'display:[% IF modeplay %]none[% ELSE %]block[% END %];' title = [% 'PLAY' | string | ucfirst %]>
+		</td>
+        
+		<td onclick="playerButtonControl('player', 'pause','p0=pause&player=[% playerURI %]&ajaxRequest=1');">
+			<img id = 'playercontrol_active_pause' src = "html/images/pl_pause_active.png" border="0" style = 'display:[% IF modepause %]block[% ELSE %]none[% END %];' title = [% 'PAUSE' | string | ucfirst %]>
+			<img id = 'playercontrol_pause' src = "html/images/pl_pause.png" border="0" style = 'display:[% IF modepause %]none[% ELSE %]block[% END %];' title = [% 'PAUSE' | string | ucfirst %]>
+		</td>
+        
+		<td onclick="playerButtonControl('player', 'stop','p0=stop&player=[% playerURI %]&ajaxRequest=1');">
+			<img id = 'playercontrol_active_stop' src = "html/images/pl_stop_active.png" border="0" style = 'display:[% IF modestop %]block[% ELSE %]none[% END %];' title = [% 'STOP' | string | ucfirst %]>
+			<img id = 'playercontrol_stop' src = "html/images/pl_stop.png" border="0" style = 'display:[% IF modestop %]none[% ELSE %]block[% END %];' title = [% 'STOP' | string | ucfirst %]>
+		</td>   
+        
+		<td> 
+			<img id = 'playercontrol_prev' src="html/images/pl_prev.png" border="0" name="prev"
+				onclick="document.prev.src = 'html/images/pl_prev_active.png'; 
+				if(_progressAt < 10)
+					playerButtonControl('player', 'prev', 'p0=playlist&p1=jump&p2=-1&player=[% playerURI %]&ajaxRequest=1');
+				else
+					playerButtonControl('player', 'prev', 'p0=time&p1=0&player=[% playerURI %]&ajaxRequest=1');" 
+				title = [% 'PREVIOUS' | string | ucfirst %]> 
+		</td>
+      
+		<td>
+			<img id = 'playercontrol_next' src="html/images/pl_next.png" border="0" name="next" 
+				onclick="document.next.src = 'html/images/pl_next_active.png'; playerButtonControl('player', 'next','p0=playlist&p1=jump&p2=%2b1&player=[% playerURI %]&ajaxRequest=1');" title = [% 'NEXT' | string | ucfirst %]>
+		</td>
+
+	</tr>
+</table>
+[% END %]
+
+[% BLOCK volume_settings %]
+	[% IF isplayer %]
+<table width = '100%' id="volumeGroup">
+	<tr>
+
+	<td id="muteControl" onclick='volumeControl("0","p0=mixer&p1=volume&p2=0&player=[% playerURI %]&start=[% start %]&ajaxRequest=1");'>
+		<img src="html/images/vol_off_symbol.png" id = 'bar_active_0' style="display:[% IF volume == 0 %]block[% ELSE %]none[% END %];" title = 'Muted'>
+		<img src="html/images/vol_off_symbol_grey.png" id = 'bar_0' style="display:[% IF volume == 0 %]none[% ELSE %]block[% END %];" title = 'Mute player'>
+	</td>
+	[% vol= [ 15, 30, 40, 50, 60, 70, 80, 90, 100 ] %]
+	[% FOREACH level IN vol %]
+	<td class="volumeElement" onclick='volumeControl("[% level %]");' valign="bottom">
+		<img src="html/images/bar_active.png" id = 'bar_active_[% level %]' border="0" width="40" height="[% loop.count*5 %]" style="display:[% IF volume >= level %]block[% ELSE %]none[% END %];" title = 'set volume to [% level %]'>
+		<img src="html/images/bar.png" id = 'bar_[% level %]' border="0" width="40" [% IF level != 0 %]height="[% loop.count*5 %]"[% END %] style="display:[% IF volume >= level %]none[% ELSE %]block[% END %];" title = 'set volume to [% level %]'>
+	</td>
+
+	[% END %]
+	<td id="volumeDownControl">
+		<img src="html/images/volume_down.png" onclick = 'adjustVolume("-1");' id = 'volume_down'>
+	</td>	
+	<td id="volumeUpControl">
+		<img src="html/images/volume_up.png" id = 'volume_up' onclick = 'adjustVolume("1");'>
+	</td>
+	</tr>
+</table>
+	[% ELSE %]
+	<span class = 'smalltext'>volume settings not available for this player</span>
+	[% END %]
+
+[% END %]
+
+[% BLOCK volume_settings_old %]
+	[% IF isplayer %]
+<table width = '100%' id="volumeGroup">
+	<tr>
+
+	<td class="volumegroupheader">
+		<img src="html/images/vol_symbol.png" title = 'Volume settings'>
+	</td>
+
+	<td id="muteControl" onclick='volumeControl("0","p0=mixer&p1=volume&p2=0&player=[% playerURI %]&start=[% start %]&ajaxRequest=1");'>
+		<img src="html/images/vol_off_symbol.png" id = 'bar_active_0' style="display:[% IF volume == 0 %]block[% ELSE %]none[% END %];" title = 'Muted'>
+		<img src="html/images/vol_off_symbol_grey.png" id = 'bar_0' style="display:[% IF volume == 0 %]none[% ELSE %]block[% END %];" title = 'Mute player'>
+	</td>
+	[% vol= [ 15, 30, 40, 50, 60, 70, 80, 90, 100 ] %]
+	[% FOREACH level IN vol %]
+	<td class="volumeElement" onclick='volumeControl("[% level %]");' valign="bottom">
+		<img src="html/images/bar_active.png" id = 'bar_active_[% level %]' border="0" width="40" height="[% loop.count*5 %]" style="display:[% IF volume >= level %]block[% ELSE %]none[% END %];" title = 'set volume to [% level %]'>
+		<img src="html/images/bar.png" id = 'bar_[% level %]' border="0" width="40" [% IF level != 0 %]height="[% loop.count*5 %]"[% END %] style="display:[% IF volume >= level %]none[% ELSE %]block[% END %];" title = 'set volume to [% level %]'>
+	</td>
+
+	[% END %]
+	<td id="volumeDownControl">
+		<img src="html/images/volume_down.png" onclick = 'adjustVolume("-1");' id = 'volume_down'>
+	</td>	
+	<td id="volumeUpControl">
+		<img src="html/images/volume_up.png" id = 'volume_up' onclick = 'adjustVolume("1");'>
+	</td>
+	</tr>
+</table>
+	[% ELSE %]
+	<span class = 'smalltext'>volume settings not available for this player</span>
+	[% END %]
+
+[% END %]
+
+[% BLOCK radio_info_display %]
+
+	<table>
+		<tr>
+			<td style="padding-right: 16px;">
+				Station:
+			</td>
+			<td>
+				<span id = 'currentsong'></span>
+			</td>
+		<tr>
+		<tr>
+			<td>
+				Track:
+			</td>
+			<td>
+				<span id = 'streamtitle'></span>
+			</td>
+		<tr>
+	</table>
+[% END %]

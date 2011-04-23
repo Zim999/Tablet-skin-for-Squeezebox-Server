@@ -1,0 +1,43 @@
+<!--browsedb_artwork.html-->
+	<span class = 'artworkViewCell'>
+		<table>
+			<tr>
+				<td>
+					[% IF item.coverThumb %]
+						<a [% PROCESS browseDbItemHRef %]>
+							[% PROCESS thumbnailItemImg height="125" width="125" fileSuffix = 'png' style='STYLE="border: 1px solid black"' %]
+						</a>
+					[% ELSE %]
+						<a [% PROCESS browseDbItemHRef %]>
+							[% PROCESS dummyItemImg height="125" width="125" style='STYLE="border: 1px solid black"' %]
+						</a>
+					[% END %]
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					<span class="artworkCaptionText">
+							[% IF item.item %]
+								[% item.item | truncate(25) %]
+							[% END %]
+							[% IF item.artist %]
+								[% itemobj = item.itemobj %]
+										[%- artistlist = PROCESS artistsAsText.html %]
+										[% artistlist | truncate(25)%]
+								[% END %]
+					</span>
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					 [% PROCESS browsecontrols_abbr
+							 itemobj = item.itemobj
+							 attributes = item.attributes
+							 odd = item.odd
+							 mixerlinks = item.mixerlinks %]
+				</td>
+			</tr>
+		</table>
+	</span>

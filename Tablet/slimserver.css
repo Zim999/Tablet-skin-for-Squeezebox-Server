@@ -1,0 +1,666 @@
+body {
+	font-family: Helvetica, Arial, sans-serif;
+	background-color: white;
+	margin-top: 0px;
+	margin-left: 0px;
+	margin-right: 0px;
+	overflow: visible;
+}
+
+a:hover, a:visited, a:active, a:link {
+	text-decoration:none;
+	color: darkblue;
+}
+
+img {
+	border: none;
+}
+
+div#page_with_bar {
+}
+
+div#topbar {
+	background-color: black;
+	color: white;
+	padding-top: 4px;
+	padding-bottom: 4px;
+	padding-left: 8px;
+	padding-right: 8px;
+}
+
+.topbarControl {
+	padding-right: 8px;
+	cursor: hand;
+}
+
+#squeezeservertitle {
+	border-left: 1px solid gray;
+	padding-left: 8px;
+	color: white;
+}
+
+#aboutlink {
+	color: white;
+	float: right;
+	padding-top: 4px;
+}
+
+#menu {
+	background-color: black;
+	background-image: url(html/images/menu_back.png);
+	width: 100%;
+	height: 50px;
+}
+
+.menuItem {
+	width: 20%; 
+	float: left;
+}
+
+.menuItem a img {
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+#topinfobar {
+	background-color: lightgray;
+	padding: 8px;
+	padding-bottom: 8px;
+	line-height: 1.1em;
+}
+
+#bottominfobar {
+	clear: both;
+	background-color: lightgray;
+	padding: 8px;
+	padding-bottom: 8px;
+}
+
+#playersettingcontrols {
+	float: right;
+	font-size: smaller;
+}
+
+#playersettingcontrols form {
+	display: inline;
+}
+
+#playerChooserContainer {
+	float: right; 
+	display: inline
+	height: 24px;
+}
+
+
+#newVersionBanner {
+  text-align: center;
+  background-color: red;
+  color: white;
+}
+
+#radioTuneIn {
+	clear: both;
+	background-color: #EEEEFF;
+	color: black;
+	padding: 8px;
+}
+
+#radioTuneIn form {
+	display: inline;
+}
+
+#homeLinksContainer {
+	overflow: auto;
+	width: 100%
+}
+
+.homeMenuItem {
+	width: 25%; 
+	float: left;
+	margin-bottom: 24px;
+}
+
+.homeMenuItem a img {
+	margin-left: auto; 
+	margin-right: auto; 
+	display: block;
+}
+
+.menutext {
+	font-size: 18px;
+	font-weight: bold;
+	color: #888888;
+}
+
+.radioLinkRow {
+	margin-top: 16px;
+}
+
+#extendedOptionsBar {
+	background-color: #FAFAFA;
+	padding: 8px;
+	padding-bottom: 8px;
+	line-height: 1.1em;
+}
+
+.homeMenuSection {
+	padding-right: 16px;
+	padding-top: 16px;
+}
+
+.homeMenuSection, ul, li {
+	margin-left: 0.5em;
+	padding-left: 0.25em;
+}
+
+.homeMenuSectionTitle {
+	border-bottom: 1px solid grey;
+}
+
+div#OSD{
+	position: fixed;
+	z-index: 100;
+	top: 30%;
+	left: 30%;
+	text-align: center;
+	background-color: #FFFFBB;
+	color: black;
+	font-weight: bold;
+	padding: 5px;
+	border: 1px solid black;
+	box-shadow: 3px 3px 10px #888;
+	-webkit-box-shadow: 3px 3px 10px #888;
+	-moz-box-shadow: 3px 3px 10px #888;
+}
+
+div#volumeOSD{
+	position: absolute;
+	z-index: 100;
+	top: 436px;
+	left: 600px;
+	background-color: #FFFFBB;
+	color: black;
+	font-weight: bold;
+	font-size: 24px;
+	padding: 5px;
+	border: 1px solid black;
+	box-shadow: 3px 3px 10px #888;
+	-webkit-box-shadow: 3px 3px 10px #888;
+	-moz-box-shadow: 3px 3px 10px #888;
+}
+
+#songInfoCover img {
+	margin: 8px;
+	margin-right: 24px;
+	border: 1px solid black;
+	box-shadow: 3px 3px 10px #888;
+	-webkit-box-shadow: 3px 3px 10px #888;
+	-moz-box-shadow: 3px 3px 10px #888;
+}
+
+#currentPlayerDisplay {
+	float: right; 
+	display: inline;
+}
+
+#playlistStatusBar {
+	background-color: #EEEEFF;
+	padding: 8px;
+}
+
+#currentlyPlayingContainer {
+	padding-top: 8px;
+	padding-left: 8px;
+	overflow: auto;
+	width: 99%
+}
+
+#artworkContainer {
+	float: left;
+}
+
+#playingTrackContainer {
+	overflow: hidden;
+}
+
+#coverart {
+}
+
+#coverartpath {
+	width: 190px;
+	border: 1px solid #999;
+	margin-bottom: 8px;
+	padding: 0px;
+}
+
+#coverart a img {
+	background-color: #999;
+	box-shadow: 3px 3px 6px #888;
+	-webkit-box-shadow: 3px 3px 6px #888;
+	-moz-box-shadow: 3px 3px 6px #888;
+}
+
+#controls {
+	padding: 8px;
+	position: relative;
+	width: 750px;
+}
+
+#controller {
+	padding-top: 2em;
+	padding-left: 12px;
+}
+
+div#progressbar {
+	z-index: -2;
+}
+
+div#progressbar table {
+	border-spacing: 0px;
+}
+
+div#progressbar_overlay {
+	width: 750px;
+	z-index: 3;
+	box-shadow: 2px 2px 6px #888;
+	-webkit-box-shadow: 2px 2px 6px #888;
+	-moz-box-shadow: 2px 2px 6px #888;
+}
+
+div#progressbar_overlay table {
+	border: 1px solid grey;
+	width: 100%;
+	border-spacing: 0px;
+	height: 20px;
+}
+
+.progressBarElapsedTime { 
+	color: white;
+	font-size: smaller;
+	padding-left: 4px;
+}
+
+.progressBarTotalTime {
+	font-size: smaller;
+	padding-right: 4px;
+}
+
+.nextprevTrackTitle {
+	color: gray;
+}
+
+#songtitle {
+	font-size: 125%;
+}
+
+#songinfo {
+	margin-left: 16px;
+}
+
+.songinfoheading {
+	padding-right: 8px;
+}
+
+.songinfotext {
+}
+
+table.thinborder { 
+	border: 1px solid black;
+}
+
+.controlgroupheader {
+	border-right: 1px solid black;
+	background-color: #EEEEEE; 
+	text-align: center;
+	padding-top: 8px;
+	padding-bottom: 8px;
+	
+	/*
+	padding-top: 8px;
+	padding-bottom: 8px;
+	*/
+}
+
+.cyclecontrolgroupheader {
+	padding: 8px;
+	text-align: center;
+	width: 40px;
+}
+
+.volumegroupheader {
+	border-right: 1px solid black;
+	background-color: #EEEEEE; 
+	text-align: center;
+	width: 56px;
+	padding-top: 8px;
+	padding-bottom: 8px;
+}
+
+#playerControlsContainer {
+	margin-top: 8px;
+	width: 45%; 
+	border: 1px solid gray; 
+}
+
+#playerControlsContainer div {
+	width: 20%; 
+	float:left;
+}
+
+#volumeControlsContainer {
+	border: 1px solid gray; 
+}
+
+#playerGroup, #volumeGroup, #repeatGroup, #shuffleGroup {
+	border: 1px solid gray;
+	margin-top: 8px;
+	border-spacing: 0px;
+	box-shadow: 2px 2px 6px #888;
+	-webkit-box-shadow: 2px 2px 6px #888;
+	-moz-box-shadow: 2px 2px 6px #888;
+	border-radius: 5px;
+	-webkit-border-radius: 5px;
+	-moz-border-radius: 5px;
+}
+
+#volumeGroup {
+	height: 58px;
+}
+
+#playerGroup {
+	margin-right: 100px;
+}
+
+#playergroup tr td {
+	padding-top: 8px;
+	padding-bottom: 8px;
+}
+
+#muteControl {
+	width: 48px;
+	border-right: 1px solid #EEEEEE; 
+	text-align: center;
+}
+
+.volumeElement {
+	padding-bottom: 4px;
+	text-align: center;
+}
+
+#volumeUpControl {
+	text-align: center;
+}
+
+#volumeDownControl {
+	border-left: 1px solid #EEEEEE;
+	text-align: center;
+}
+
+#FormSong {
+	display: inline;
+}
+
+#browsedbHeader, #browsedbFooter {
+	background-color: #EEEEFF;
+	padding: 8px;
+	padding-bottom: 8px;
+	line-height: 1.1em;
+}
+
+#browsedbList {
+	padding: 8px;
+}
+
+.browsedbListItem {
+	height: 36px;
+}
+
+.searchHeader {
+	background-color: #DDDDFF;
+	padding: 4px;
+	margin-top: 4px;
+	margin-bottom: 4px;
+	font-weight: bold;
+}
+
+div.odd, tr.odd {
+	padding-left: 4px;
+	padding-top: 2px;
+	padding-bottom: 2px;
+	background-color: #EEEEEE;
+}
+
+div.even, tr.even {
+	padding-left: 4px;
+	padding-top: 2px;
+	padding-bottom: 2px;
+	background-color: #FFFFFF;
+}
+
+.itemtext, .smalltext {
+	font-size: smaller;
+	color: gray;
+}
+
+.itemtext a, .smalltext a {
+	font-size: larger;
+}
+
+#playlistContainer {
+	padding: 4px;
+}
+
+.buttonControls a img, .buttonControls img {
+	vertical-align: middle;
+}
+
+.artworkViewCell {
+	padding-left: 8px;
+}
+
+.artworkViewCell table {
+	display: inline; 
+	width: 140px;
+	text-align: center;
+	vertical-align: top;
+}
+
+.artworkCaptionText {
+	font-size: x-small;
+	white-space: nowrap;	
+	overflow: hidden;
+}
+
+#galleryToggle {
+}
+
+#galleryToggle img {
+	vertical-align: middle;
+}
+
+.smallLabel {
+	font-size: smaller;
+}
+
+#albumArt { 
+	margin: 8px;
+	margin-right: 24px;
+	background-color: #999;
+	box-shadow: 3px 3px 10px #888;
+	-webkit-box-shadow: 3px 3px 10px #888;
+	-moz-box-shadow: 3px 3px 10px #888;
+}
+
+.albumArtContainer {
+	padding: 8px;
+	padding-top: 0px;
+}
+
+#albumArtResizeContainer {
+	padding-left: 8px;
+	padding-top: 8px;
+}
+
+.playing {
+	background-color: lightyellow;
+}
+
+.numberText {
+	font-size: smaller;
+	color: gray;
+}
+
+.playingitemtext, a.playingitemtext {
+	color: red;
+}
+
+.playlistcontrolsContainer {
+	width: 90%;
+}
+
+#radioinfo {
+	padding-top: 16px;
+	padding-left: 16px;
+}
+
+#streamInfo {
+}
+
+#streamtitleContainer {
+	padding-top: 16px;
+}
+
+#streamtitle {
+	font-weight: bold;
+}
+
+#currentsong {
+	font-weight: bold;
+}
+
+#mainbody {
+	padding: 8px;
+	padding-left: 12px;
+}
+
+#defaultform {
+	padding-top: 8px;
+}
+
+#settingsRegion {
+	padding: 8px;
+	padding-bottom: 100px;
+}
+
+#settingChooser {
+	padding: 8px;
+	background-color: lightgray;
+}
+
+#setup_chooser {
+	margin-bottom: 0px;
+	padding-bottom: 0px;
+}
+
+<!-- Settings -->
+#statusarea {
+	background-color: red;
+	color: yellow;
+}
+
+.settingsstatusarea {
+	background-color: red;
+	color: yellow;
+	padding: 8px;
+}
+
+.settingsHeadingsSeparator {
+	color: gray;
+	padding-left: 16px;
+	padding-right: 16px;
+}
+
+#setuptabs ul, #setuptabs ul li {
+	padding: 0px;
+	margin: 0px;
+}
+
+#setuptabs ul li {
+	list-style: none;
+	width: 30%;
+	float: left;
+	border: solid 1px white;
+  padding: 5px;
+  margin: 2px;
+  background-color: #EEEEEE;
+}
+
+#currTab a {
+	color: blue;
+}
+
+.settingSection {
+	padding-top: 16px;
+}
+
+#settingsForm {
+	padding-top: 0px;
+	margin-top: 0px;
+}
+
+#settingsRegion {
+	padding-top: 0px;
+	margin-top: 0px;
+}
+
+.settingGroup {
+	padding-bottom: 8px;
+}
+
+.prefHead {
+	font-weight: bold;
+	background-color: #EEEEFF;
+	padding: 4px;
+}
+
+.prefDesc {
+	font-size: smaller;
+}
+
+.prefs {
+	padding-left: 16px;
+}
+
+.playericon {
+	width: 100px;
+	height: 100px;
+	vertical-align: middle;
+}
+
+#innerSettingsBlock {
+	padding-top: 0px;
+	margin-top: 0px;
+}
+
+#prefsSubmit {
+	background-color: lightgray;
+	margin-top: 16px;
+	padding-top: 8px;
+	padding-bottom: 8px;
+	padding-left: 8px;
+}
+
+.settingSection table tr {
+	text-align: left;
+	font-size: smaller;
+}
+
+#aboutBody {
+	padding-left: 8px;
+	padding-right: 8px;
+}
+
+.pagebartext {
+	font-size: larger;
+}

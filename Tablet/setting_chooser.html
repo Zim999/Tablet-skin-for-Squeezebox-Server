@@ -1,0 +1,77 @@
+<!-- Setting_chooser.html -->
+
+<div id="settingChooser">
+[%- IF playerid && needsClient %][% setuplinks = playersetup %][% ELSE %][% setuplinks = additionalLinks.setup %][% END -%]
+[%- FOREACH token = setuplinks.keys -%]
+	[% stringkeys.$token = token | string | html -%]
+[%- END -%]
+
+[% useTabList = 0 %]
+
+[%- IF useTabList %]
+    [%- IF setuplinks && stringkeys %]
+     	<div id="setuptabs"><ul>
+      
+      [%- FOREACH stringkey = stringkeys.sort %]
+        <a href="[% webroot %][% setuplinks.$stringkey %]player=[% playerURI %][% IF playerid %]&amp;playerid=[% playerid %][% END %]">
+          <li [% IF page == stringkey %] id="currtab"[% END %]>
+	        	[% stringkey | string | html %]
+        	</li>
+        </a>
+      [%- END -%]
+      </ul>
+      </div>
+      <div style="clear: both"></div>
+    [%- END -%]
+[%- ELSE -%]
+
+	[%- 
+	BLOCK addSetupLinks;
+		IF setuplinks;
+			sortedlinks = [];
+			sortedplugins = [];
+			FOREACH token = stringkeys.sort;
+				IF setuplinks.$token.search('plugin');
+					sortedplugins.push(token);
+				ELSE;
+					sortedlinks.push(token);
+				END;
+			END %]
+	
+			<optgroup label="[% "SETTINGS" | string %]">
+			[% FOREACH stringkey IN sortedlinks %]
+				<option [% IF page == stringkey %]selected[% END %] value="[% stringkey %]" label="[% stringkeys.$stringkey %]">[% stringkeys.$stringkey %]</option>
+			[%- END %]
+			</optgroup>
+			<optgroup label="[% "SETUP_GROUP_PLUGINS" | string %]">
+			[% FOREACH stringkey IN sortedplugins %]
+				<option [% IF page == stringkey %]selected[% END %] value="[% stringkey %]" label="[% stringkeys.$stringkey %]">[% stringkeys.$stringkey %]</option>
+			[%- END %]
+			</optgroup>
+		[% END;
+	END %]
+
+<form id="setup_chooser" name="setup_chooser" method="get" action="[% webroot %]setup.html" target="header">
+<input type="hidden" name="pageAntiCSRFToken" value="[% pageAntiCSRFToken %]">
+	<select ID="choose_setting" NAME="choose_setting" class="stdedit" style="width:17em;" onchange="chooseSettings(selectedIndex,options[selectedIndex].value)">
+		[% UNLESS setting_chooser_noHome %]
+			<option [% IF page == "HOME" %]selected[% END %] value="HOME" label="[% "HOME" | string %]">
+				[% "HOME" | string %]
+			</option>
+		[% END %]
+		[% PROCESS addSetupLinks %]
+	</select>
+	<input type=hidden value="[% page %]" name="page">
+	<input type=hidden value="[% playerid | uri %]" name="playerid">
+	
+	[% IF NOT nosubmit %]
+		<input name="topsaveSettings" id="topsaveSettings" type="submit" class="stdclick" value="[% "SAVE_SETTINGS" | string %]" 
+			onClick = "document.getElementById('saveSettings').click();return false;">
+	[% END %]
+	
+</form>
+[% END %]
+
+</div>
+
+<!-- End Setting_chooser.html -->

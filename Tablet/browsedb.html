@@ -1,0 +1,132 @@
+[%# Page browsedb.html %]
+[%- IF ajaxRequest -%]
+        <pre>
+	[% pageType = 'artwork' %]
+	[% IF browseby == 'BROWSE_BY_ARTWORK' && level == 0 %]
+		[% pageType = 'artwork' %]
+	[% END %]
+	[% PROCESS ajaxRequest.txt page = pageType %]
+        </pre>
+[% ELSIF artwork == 4 %]
+[% IF browse_items %]
+	<table width = '100%'>
+	<tr class = 'playing' height = '32'><td colspan = '2' class = 'popUpText'><b>[% browse_items.1.artist.name %] - [% browse_items.1.itemobj.album.name %]</b></td></tr>
+	[% FOREACH item = browse_items %]
+    [% PROCESS browsedbitems_list.html textClass = 'popUpText' playLink = 'ajax' noLink = 1 %]
+	[% END %]
+	</table>
+[% END %]
+[%- ELSE -%]
+<!-- browsedb.html -->
+[%- title = BLOCK %]
+[%- playermodel | string %] : [% browseby | string -%]
+[%- END -%]
+[%- browse   = '0'
+   playlist = '0'
+   music    = '1' -%]
+[%- IF artwork == 2 -%]
+	[% thispage = 'artwork' %]
+[%- ELSE -%]
+	[% thispage = 'browse' %]
+[%- END -%]
+[%- PROCESS pageheader.html thispage = thispage -%]
+
+[% IF warn %]
+	<div id="newVersionBanner">
+		<b>[% "NOTE" | string %]</b> [% "SCAN_WARNING" | string -%]
+		[% IF audiodir %][% "SCAN_CLICK" | string %] 
+			<a href="browsetree.html?player=[% playerURI %]"><font class="pagebartext">[% "HERE" | string %]</a>.</font>
+		[% END %]
+	</div>
+[% END %]
+<!-- [%# PROCESS galleryselect.html %] -->
+
+<div id = 'pagecontainer'>
+
+<div>
+<table border="0" cellspacing="0" cellpadding="0" width="100%" id="topinfobar">
+	<tr>
+		<td>
+			Viewing: [% PROCESS crumblist noHomeLink = 1%]
+		</td>
+		<td align="right">
+			[% PROCESS galleryselect.html %]
+		</td>
+	</tr>
+	<tr>
+		<td colspan="2" width="100%" class="pagebartext" style="padding-left: 8px; padding-bottom: 4px">
+			[%- IF pageinfo.totalpages > 1 && pageinfo.totalalphapages != 1 %]
+				[% IF artwork == 2 %]
+					[% PROCESS pagebar artwork = 2 %]
+				[% ELSE %]
+					[% PROCESS pagebar %]
+				[% END %]
+				[%- IF NOT pageinfo.alphamap %]
+					&nbsp;|&nbsp;
+					[% PROCESS pagebarheader %]
+				[% END %]
+			[%- END %]
+		</td>
+	</tr>
+</table>
+</div>
+
+[% IF coverArt %]
+<div id="albumArtResizeContainer">
+	<a href = "javascript:changeThumbSize('shrink', 'albumArt', '[% coverArt %]');">[% "SHRINK" | string %]</a> |
+	<a href = "javascript:changeThumbSize('enlarge', 'albumArt', '[% coverArt %]');">[% "ENLARGE" | string %]</a>
+</div>
+[% END %]
+
+[%- IF artwork == 1 && (levelName == 'album' || levelName == 'age') %]
+	[%- IF browse_items %]
+		[%- FOREACH item = browse_items %]
+			[% IF loop.first && item.text == 'All Songs' %]
+				<table width = '100%'>
+				[% PROCESS browsedbitems_list.html rowClass = 'even' %]
+				</table>
+			[% ELSE -%]
+				[% PROCESS browsedb_artwork.html %]
+			[% END -%]
+		[% END -%]
+	[% END -%]
+[% ELSE -%]
+
+<table width='100%'>
+	<tr>
+[% IF coverArt %]
+		<td class="albumArtContainer" valign = 'top' width="[% IF thumbSize %][% thumbSize %][% ELSE %]200[% END %]px">
+			<img src="/music/[% coverArt %]/cover_[% IF thumbSize %][% thumbSize %]x[% thumbSize %][% ELSE %]200x200[% END %]_p.png" 
+				id = 'albumArt'>
+		</td>
+[% END %]
+		<td valign = 'top'>
+			[%- IF browse_items %]
+				[%- FOREACH item = browse_items %]
+					[% PROCESS browsedbitems_list.html %]
+				[% END -%]
+			[%- ELSE -%]
+				[% browse_list -%]
+			[% END -%]
+		</td>
+	</tr>
+</table>
+[% END %]
+
+[%- IF pageinfo.totalpages > 1 && pageinfo.totalalphapages != 1 %]
+	<table border="0" class = 'floater' width="100%" id="bottominfobar">
+		<tr>
+			<td class="pagebartext">
+				[%- IF pageinfo.totalpages > 1 && pageinfo.totalalphapages != 1 %]&nbsp;[% PROCESS pagebar %]
+					[%- IF NOT pageinfo.alphamap %]&nbsp;|&nbsp;[% PROCESS pagebarheader %][% END %]
+				[%- END %]
+			</td>
+		</tr>
+	</table>
+[% END %]
+
+[%# /Page browsedb.html %]
+[% PROCESS pagefooter.html %]
+[% END %]
+
+
