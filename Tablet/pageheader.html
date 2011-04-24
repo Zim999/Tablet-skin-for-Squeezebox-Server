@@ -46,12 +46,27 @@
 	<div id = 'page_with_bar'>
 		<div id = 'topbar'>
 			<img class="topbarControl" 
-				src = '[% webroot %]html/images/play_transparent.gif' onClick='miniControls("play");' alt = 'Play'>
+				src = '[% webroot %]html/images/play_transparent.gif' onClick='miniControls("play");' alt = 'Play' title="Play">
 			<img class="topbarControl" 
-				src = '[% webroot %]html/images/pause_transparent.gif' onClick='miniControls("pause");' alt = 'Pause'>
+				src = '[% webroot %]html/images/pause_transparent.gif' onClick='miniControls("pause");' alt = 'Pause' title="Pause">
 			<span id="squeezeservertitle">SqueezeServer</span>
 			<span >
-				<a id="aboutlink" href="[% webroot %]html/about.html">[% "ABOUT_SHORT" | string %]</a>
+			
+				<a id="aboutlink" href="[% webroot %]html/about.html" title='[% "ABOUT_SHORT" | string %]'>
+					<img src='[% webroot %]html/images/aboutbttn.png' alt="About">
+				</a>
+
+	[% IF not nosetup %]
+		[%- IF not noserver %]
+			<span id="serversettingslink">			
+				<a href="settings/server/basic.html" title='[% "SERVER_SETTINGS" | string %]'>
+					<img src='[% webroot %]html/images/gear.png' alt="Server Settings">
+				</a>
+				&nbsp;&nbsp;
+			</span>
+		[%- END %]
+	[% END %]
+	
 			</span>
 		</div>
 	
@@ -93,5 +108,3 @@
 <!-- End pageheader.html -->
 
 [% pageHeaderInfo %]
-
-

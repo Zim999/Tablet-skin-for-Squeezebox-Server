@@ -94,6 +94,19 @@
 				[% END %]
 			[% END %]
 			
+			&nbsp;&nbsp;
+
+			<a href="[% webroot %]settings/player/basic.html?player=[% playerURI %]
+				&amp;playerid=[% playerURI %]" title='[% "PLAYER_SETTINGS" | string %]'>
+				
+				<img src='[% webroot %]html/images/gearblack.png' alt="Player Settings">
+<!--
+				
+				[% "PLAYER_SETTINGS" | string %]
+-->
+			</a>
+			
+			
 			[%# hack to retrieve player power when it's not available on the page %]
 			[% UNLESS mode %]
 				[%- USE Clients; players = Clients.get("id") -%]
@@ -107,8 +120,8 @@
 					[% END -%]
 				[% END -%]
 			[% END -%]
-			&nbsp;|&nbsp;
-			
+
+			&nbsp;&nbsp;
 				<a href = "[% webroot %][% statusroot %]?p0=power&amp;p1=[% IF mode == 'off' %]1[% ELSE %]
 						0[% END %]&amp;p2=&amp;player=[% playerURI %]&amp;start=">
 					<img style="vertical-align: top" src="[% webroot %]html/images/power[% IF mode == 'off' %]_off[% END %].png">
@@ -167,6 +180,7 @@
 		[% END %]
 	[% END %]
 
+<!--
 	[% IF thispage != 'radio' %]
 		<div id="extendedOptionsBar">
 			<a href="[% webroot %]settings/server/basic.html">[% "SERVER_SETTINGS" | string %]</a>
@@ -175,15 +189,9 @@
 			<a href="[% webroot %]settings/player/basic.html?player=[% playerURI %]
 				&amp;playerid=[% playerURI %]">[% "PLAYER_SETTINGS" | string %]</a>
 
-<!--
-			&nbsp; | &nbsp;
-
-			<a href="[% webroot %]home.html?extended_browse=1&player=[% playerURI %]">
-				[% "MORE" | string %]
-			</a>
--->
 		</div>
 	[% END %]
+-->
 
 	
 [% ELSE %]	
@@ -239,7 +247,6 @@
 		</ul>
 	</div>
 	[% END %]
-	
 
 	[% IF not nosetup %]
 	<div class="homeMenuSection">

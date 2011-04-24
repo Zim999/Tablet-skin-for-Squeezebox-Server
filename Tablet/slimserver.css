@@ -45,6 +45,17 @@ div#topbar {
 	padding-top: 4px;
 }
 
+#serversettingslink {
+	color: white;
+	float: right;
+	padding-top: 4px;
+}
+
+.whitelink {
+	color: white;
+	padding-top: 4px;
+}
+
 #menu {
 	background-color: black;
 	background-image: url(html/images/menu_back.png);
@@ -663,4 +674,43 @@ div.even, tr.even {
 
 .pagebartext {
 	font-size: larger;
+}
+
+.fileselectorautocomplete {
+	font-size: x-small;
+	position: absolute;
+	min-width: 500px;
+	height: 300px;
+	left: 380px;
+	overflow: auto;
+	background-color: #FFFFEE;
+	border: 1px solid #888;
+	margin: 8px;
+	padding: 0px;
+	margin-left: 80px;
+}
+
+.fileselectorautocomplete ul {
+	list-style-type: none;
+	/*margin: 0px;
+	padding: 0px;
+	*/
+}
+
+.fileselectorautocomplete ul li.selected {
+	background-color: navy;
+	color: white;
+}
+
+.fileselectorautocomplete ul li {
+	list-style-type: none;
+	display: block;
+	margin: 0;
+	padding: 2px;
+	height: 12px;
+	cursor: pointer;
+	white-space: nowrap
+}
+
+#fileselectorautocomplete {
 }

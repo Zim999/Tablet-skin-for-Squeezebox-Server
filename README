@@ -1,0 +1,13 @@
+Tablet Skin for Squeezebox Server
+=================================
+
+This is a skin for the Logitech Squeezebox server. It is intended to be a reasonably lightweight skin that works nicely on the Apple iPad.
+
+This version has been tested on the v7.5.x series of Squeezebox Server.
+
+Changes for v1.1.1
+------------------
+
+* Improved autocomplete popup for Settings.
+* Moved the Server Settings and Player Settings items from the home page footer to 'gear' icons.
+
