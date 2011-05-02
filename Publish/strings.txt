@@ -1,0 +1,6 @@
+PLUGIN_TABLET
+	EN	Tablet Skin
+
+PLUGIN_TABLET_DESC
+	EN	Squeezebox Server skin for use with an Apple iPad
+
