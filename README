@@ -5,9 +5,17 @@ This is a skin for the Logitech Squeezebox server. It is intended to be a reason
 
 This version has been tested on the v7.5.x series of Squeezebox Server.
 
-Changes for v1.1.1
+Changes for v1.2
 ------------------
 
 * Improved autocomplete popup for Settings.
 * Moved the Server Settings and Player Settings items from the home page footer to 'gear' icons.
+
+The Code
+--------
+
+The Tablet folder contains the skin.
+
+The Publish folder contains the files required for publishing the skin as a Squeezebox Server plugin.
+
 
