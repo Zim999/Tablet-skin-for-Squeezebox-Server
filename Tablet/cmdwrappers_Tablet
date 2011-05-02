@@ -106,6 +106,18 @@
 </div>
 [%- END %]
 
+
+[% BLOCK settingGroup %]
+	<div class="settingGroup">
+		[% IF title && simple %]<p><b>[% title | getstring %]</b></p>
+		[% ELSIF title %]<div class="prefHead">[% title | getstring %]</div>[% END %]
+		[% IF desc && !simple %]<div class="prefDesc hiddenDesc">[% desc | getstring %]</div>[% END %]
+		<div class="prefs">[% content %]&nbsp;</div>
+	</div>
+[% END -%]
+
+
+
 [% BLOCK playlistcontrols %]
 	[% width='20' height='20'  %]
 	[% WRAPPER playlink     %][% PROCESS cmdHRef cmdType = 'jump'                           %][% END %]
